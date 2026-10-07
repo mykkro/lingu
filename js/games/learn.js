@@ -52,6 +52,7 @@
     }
 
     L.cardsShown++;
+    Progress.card();
     if (L.mascot && L.cardsShown % 7 === 0) tm.after(1200, () => L.mascot.chatter());
     schedule();
   }

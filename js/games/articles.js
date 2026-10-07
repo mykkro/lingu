@@ -51,7 +51,7 @@
     btn.classList.remove('dim');
     btn.classList.add(ok ? 'correct' : 'wrong');
     $('.art-blank', q).outerHTML = `<b class="art-filled ${ok ? 'good' : 'bad'}">${esc(right)}</b>`;
-    App.speak(word(r.e, r.c, true), r.c);
+    Progress.answer(r.c, ok);
     if (ok) {
       G.streak++; G.score += 10 + Math.min(G.streak - 1, 10) * 2;
       if (G.streak % 5 === 0) buddy.cheer(); else buddy.mood('happy', 700);
@@ -77,12 +77,12 @@
   function finish() {
     G.running = false;
     tm.clear();
-    const record = App.best.submit('articles', G.score);
+    const { record } = Progress.finish('articles', 'articles', G.score, { detail: { rounds: G.rounds } });
     const missed = G.missed.slice(-8).map(r => `<li>${tag(r.c)} <b>${esc(word(r.e, r.c, true))}</b>${App.gloss(r.e) ? ` <span class="muted">${esc(App.gloss(r.e))}</span>` : ''}</li>`).join('');
     shell.show({
       title: t('c.gameOver'),
       html: `<div class="stats"><div><b>${G.score}</b><span>${t('c.score')}</span></div><div><b>${G.rounds - G.missed.length}/${G.rounds}</b><span>${t('c.correct')}</span></div>
-        <div><b>${App.best.get('articles')}</b><span>${t(record ? 'c.newBest' : 'c.best')}</span></div></div>
+        <div><b>${Progress.best('articles')}</b><span>${t(record ? 'c.newBest' : 'c.best')}</span></div></div>
         ${missed ? `<h3>${t('art.review')}</h3><ul class="review">${missed}</ul>` : ''}`,
       actions: [['start', t('c.playAgain')]],
       mood: record ? 'happy' : 'sad',

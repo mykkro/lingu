@@ -130,6 +130,7 @@
     G.rounds++;
     const correctBtn = $('.opt[data-correct="1"]', arena);
     $$('.opt', arena).forEach(o => { if (o !== btn && o !== correctBtn) o.classList.add('dim'); });
+    Progress.answer(G.round.answerLang, !!(btn && btn.dataset.correct));
     if (btn && btn.dataset.correct) {
       G.correct++; G.streak++;
       const bonus = App.S.timeLimit ? Math.ceil(Math.max(0, G.deadline - performance.now()) / 1000) : 0;
@@ -165,14 +166,14 @@
   function end() {
     G.running = false;
     tm.clear();
-    const record = App.best.submit('cloud', G.score);
+    const { record } = Progress.finish('cloud', 'cloud', G.score, { detail: { rounds: G.rounds, correct: G.correct } });
     const acc = G.rounds ? Math.round(G.correct / G.rounds * 100) : 0;
     const missed = G.missed.slice(-8).map(r =>
       `<li>${tag(r.p)} ${esc(word(r.e, r.p))} <span class="arrow">→</span> ${tag(r.answerLang)} <b>${esc(word(r.e, r.answerLang))}</b></li>`).join('');
     const line = Mascot.line(record ? 'cheers' : 'oops');
     shell.show({
       title: t('c.gameOver'),
-      html: `<div class="stats"><div><b>${G.score}</b><span>${t('c.score')}</span></div><div><b>${G.correct}/${G.rounds}</b><span>${t('c.correct')}</span></div><div><b>${acc}%</b><span>${t('c.accuracy')}</span></div><div><b>${App.best.get('cloud')}</b><span>${t(record ? 'c.newBest' : 'c.best')}</span></div></div>
+      html: `<div class="stats"><div><b>${G.score}</b><span>${t('c.score')}</span></div><div><b>${G.correct}/${G.rounds}</b><span>${t('c.correct')}</span></div><div><b>${acc}%</b><span>${t('c.accuracy')}</span></div><div><b>${Progress.best('cloud')}</b><span>${t(record ? 'c.newBest' : 'c.best')}</span></div></div>
         ${missed ? `<h3>${t('cloud.review')}</h3><ul class="review">${missed}</ul>` : ''}`,
       actions: [['start', t('c.playAgain')]],
       mood: record ? 'happy' : 'sad',

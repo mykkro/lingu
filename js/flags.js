@@ -27,6 +27,8 @@ const Flags = (() => {
     sv: nordic('#006AA7', '#FECC00'),
     hu: h3('#CD2A3E', '#fff', '#436F4D'),
     fi: nordic('#fff', '#002F6C'),
+    da: nordic('#C8102E', '#fff'),
+    no: nordic('#BA0C2F', '#fff', '#00205B'),
   };
 
   function svg(code) {

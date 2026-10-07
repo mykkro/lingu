@@ -11,7 +11,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -89,10 +89,12 @@
       <section id="game-pairs" class="game" role="tabpanel" hidden>
         <canvas class="game-bg" aria-hidden="true"></canvas>
         <div class="hud">
-          <div><span data-i18n="hud.time">Time</span><b data-hud="time">0.0s</b></div>
-          <div><span data-i18n="hud.mistakes">Mistakes</span><b data-hud="mistakes">0</b></div>
+          <div><span data-i18n="hud.score">Score</span><b data-hud="score">0</b></div>
+          <div><span data-i18n="hud.time">Time</span><b data-hud="time">30s</b></div>
           <div><span data-i18n="hud.boards">Boards</span><b data-hud="boards">0</b></div>
+          <div class="strikes" data-hud="strikes"></div>
         </div>
+        <div class="timer"><div></div></div>
         <div class="pairs-board"></div>
         <div class="game-mascot"></div>
         <div class="overlay" hidden></div>
@@ -127,6 +129,26 @@
         </div>
         <div class="game-mascot"></div>
         <div class="overlay" hidden></div>
+      </section>
+      <!-- Fill the gap -->
+      <section id="game-gap" class="game" role="tabpanel" hidden>
+        <canvas class="game-bg" aria-hidden="true"></canvas>
+        <div class="hud">
+          <div><span data-i18n="hud.score">Score</span><b data-hud="score">0</b></div>
+          <div><span data-i18n="hud.streak">Streak</span><b data-hud="streak">0</b></div>
+          <div class="strikes" data-hud="strikes"></div>
+        </div>
+        <div class="quiz">
+          <div class="gap-question blitz-question"></div>
+          <div class="gap-options blitz-options"></div>
+        </div>
+        <div class="game-mascot"></div>
+        <div class="overlay" hidden></div>
+      </section>
+
+      <!-- Stats -->
+      <section id="game-stats" class="game" role="tabpanel" hidden>
+        <div class="stats-page"></div>
       </section>
     </main>
   </div>
@@ -224,6 +246,7 @@
   <script src="js/flags.js"></script>
   <script src="js/art.js"></script>
   <script src="js/core.js"></script>
+  <script src="js/progress.js"></script>
   <script src="js/mascot.js"></script>
   <script src="js/games/shell.js"></script>
   <script src="js/games/learn.js"></script>
@@ -232,6 +255,8 @@
   <script src="js/games/pairs.js"></script>
   <script src="js/games/guess.js"></script>
   <script src="js/games/articles.js"></script>
+  <script src="js/games/gap.js"></script>
+  <script src="js/games/stats.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

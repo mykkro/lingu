@@ -64,6 +64,7 @@
     if (!G.running || G.locked || !btn) return;
     G.locked = true;
     const ok = !!btn.dataset.correct;
+    Progress.answer(G.round.target, ok);
     $$('.blitz-opt', grid).forEach(b => b.classList.add(b.dataset.correct ? 'reveal' : 'dim'));
     btn.classList.remove('dim');
     btn.classList.add(ok ? 'correct' : 'wrong');
@@ -98,12 +99,12 @@
     G.running = false;
     tm.clear();
     const key = 'blitz' + App.S.blitzSeconds;
-    const record = App.best.submit(key, G.score);
+    const { record } = Progress.finish('blitz', key, G.score, { detail: { wrong: G.wrong } });
     const answered = G.score + G.wrong;
     shell.show({
       title: t('blitz.timeUp'),
       html: `<div class="stats"><div><b>${G.score}</b><span>${t('c.correct')}</span></div><div><b>${G.wrong}</b><span>${t('c.wrong')}</span></div>
-        <div><b>${answered ? Math.round(G.score / answered * 100) : 0}%</b><span>${t('c.accuracy')}</span></div><div><b>${App.best.get(key)}</b><span>${t(record ? 'c.newBest' : 'c.best')}</span></div></div>`,
+        <div><b>${answered ? Math.round(G.score / answered * 100) : 0}%</b><span>${t('c.accuracy')}</span></div><div><b>${Progress.best(key)}</b><span>${t(record ? 'c.newBest' : 'c.best')}</span></div></div>`,
       actions: [['start', t('c.again')]],
       mood: record ? 'happy' : 'wave',
       say: Mascot.line(record ? 'cheers' : 'hello'),

@@ -59,7 +59,7 @@
     btn.classList.add(ok ? 'correct' : 'wrong');
     const g = App.gloss(r.e), meaning = g && norm(g) !== norm(r.e[r.answer]) ? `“${g}”` : '';
     $('.guess-meaning', cardSlot).textContent = `${App.langName(r.answer)}${meaning ? ' · ' + meaning : ''}`;
-    App.speak(r.e[r.answer], r.answer);
+    Progress.answer(r.answer, ok);
     if (ok) { G.score++; G.streak++; if (G.streak % 4 === 0) buddy.cheer(); else buddy.mood('happy', 800); }
     else { G.streak = 0; buddy.mood('sad', 900); }
     G.log.push({ r, ok });
@@ -80,12 +80,12 @@
     G.running = false;
     tm.clear();
     const key = 'guess' + App.S.guessQuestions;
-    const record = App.best.submit(key, G.score);
+    const { record } = Progress.finish('guess', key, G.score, { detail: { total: G.n } });
     const misses = G.log.filter(x => !x.ok).slice(-8).map(({ r }) =>
       `<li>${esc(word(r.e, r.answer))} <span class="arrow">→</span> ${App.tag(r.answer)} ${esc(App.langName(r.answer))}</li>`).join('');
     shell.show({
       title: `${G.score} / ${G.n}`,
-      html: `<div class="stats"><div><b>${G.score}</b><span>${t('c.correct')}</span></div><div><b>${App.best.get(key)}</b><span>${t(record ? 'c.newBest' : 'c.best')}</span></div></div>
+      html: `<div class="stats"><div><b>${G.score}</b><span>${t('c.correct')}</span></div><div><b>${Progress.best(key)}</b><span>${t(record ? 'c.newBest' : 'c.best')}</span></div></div>
         ${misses ? `<h3>${t('guess.review')}</h3><ul class="review">${misses}</ul>` : ''}`,
       actions: [['start', t('c.playAgain')]],
       mood: G.score >= G.n * 0.7 ? 'happy' : 'wave',

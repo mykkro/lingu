@@ -11,6 +11,8 @@
     { id: 'pairs', icon: '<rect x="3" y="4" width="7" height="16" rx="2"/><rect x="14" y="4" width="7" height="16" rx="2"/><path d="M10 12h4"/>' },
     { id: 'guess', icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>' },
     { id: 'articles', icon: '<path d="M5 19 9.5 5h1L15 19M7 14h6"/><path d="M17 9h4M19 7v4"/>' },
+    { id: 'gap', icon: '<path d="M3 12h4M17 12h4"/><rect x="9" y="8" width="6" height="8" rx="1.5" stroke-dasharray="2 2"/>' },
+    { id: 'stats', icon: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/>' },
   ];
   let mode = null;
 
@@ -32,7 +34,13 @@
     syncNav();
   }
 
-  function syncNav() { $$('.nav-btn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === mode))); }
+  function syncNav() {
+    $$('.nav-btn').forEach(b => {
+      const on = b.dataset.mode === mode;
+      b.setAttribute('aria-selected', String(on));
+      if (on) b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
+  }
 
   function setMode(next) {
     if (!App.games[next]) next = 'learn';
