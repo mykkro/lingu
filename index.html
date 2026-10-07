@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#16181d" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Lingu: a playful multi-language vocabulary trainer with flash cards and games.">
+  <title>Lingu</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="load-error" class="load-error" hidden>
+    <div class="load-error-card">
+      <h1 data-i18n="load.title">Lingu needs its vocabulary</h1>
+      <p id="load-error-msg"></p>
+      <p data-i18n="load.fileHint"></p>
+      <label class="btn primary file-btn"><span data-i18n="load.pick">Choose vocabulary.json</span><input id="load-error-file" type="file" accept=".json,application/json"></label>
+    </div>
+  </div>
+
+  <div id="app" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <div id="brand-mascot" class="brand-mascot"></div>
+        <div class="brand-text"><b>Lingu</b><small data-i18n="app.tagline">playful language trainer</small></div>
+      </div>
+      <nav id="nav" class="nav" role="tablist" aria-label="Modes"></nav>
+      <button id="open-settings" class="icon-btn" data-i18n-aria="app.settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
+    </header>
+
+    <main>
+      <!-- Learn -->
+      <section id="game-learn" class="game" role="tabpanel" hidden>
+        <div class="learn-stage"></div>
+        <div class="learn-bottom">
+          <div class="learn-mascot"></div>
+          <div class="learn-controls">
+            <button class="icon-btn" data-act="prev" data-i18n-aria="learn.prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+            <button class="icon-btn big" data-act="pause" data-i18n-aria="learn.pause">
+              <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>
+              <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>
+            </button>
+            <button class="icon-btn" data-act="next" data-i18n-aria="learn.next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+          </div>
+          <p class="learn-hint" data-i18n="learn.swipe"></p>
+        </div>
+        <div class="learn-progress"><div></div></div>
+      </section>
+
+      <!-- Word Cloud -->
+      <section id="game-cloud" class="game" role="tabpanel" hidden>
+        <canvas class="game-bg" aria-hidden="true"></canvas>
+        <div class="hud">
+          <div><span data-i18n="hud.score">Score</span><b data-hud="score">0</b></div>
+          <div><span data-i18n="hud.streak">Streak</span><b data-hud="streak">0</b></div>
+          <div class="strikes" data-hud="strikes"></div>
+        </div>
+        <div class="timer"><div></div></div>
+        <div class="arena"></div>
+        <div class="game-mascot"></div>
+        <div class="overlay" hidden></div>
+      </section>
+
+      <!-- Blitz -->
+      <section id="game-blitz" class="game" role="tabpanel" hidden>
+        <canvas class="game-bg" aria-hidden="true"></canvas>
+        <div class="hud">
+          <div><span data-i18n="hud.score">Score</span><b data-hud="score">0</b></div>
+          <div><span data-i18n="hud.time">Time</span><b data-hud="time">60s</b></div>
+        </div>
+        <div class="timer"><div></div></div>
+        <div class="quiz">
+          <div class="blitz-question"></div>
+          <div class="blitz-options"></div>
+        </div>
+        <div class="game-mascot"></div>
+        <div class="overlay" hidden></div>
+      </section>
+
+      <!-- Pairs -->
+      <section id="game-pairs" class="game" role="tabpanel" hidden>
+        <canvas class="game-bg" aria-hidden="true"></canvas>
+        <div class="hud">
+          <div><span data-i18n="hud.time">Time</span><b data-hud="time">0.0s</b></div>
+          <div><span data-i18n="hud.mistakes">Mistakes</span><b data-hud="mistakes">0</b></div>
+          <div><span data-i18n="hud.boards">Boards</span><b data-hud="boards">0</b></div>
+        </div>
+        <div class="pairs-board"></div>
+        <div class="game-mascot"></div>
+        <div class="overlay" hidden></div>
+      </section>
+
+      <!-- Which language? -->
+      <section id="game-guess" class="game" role="tabpanel" hidden>
+        <canvas class="game-bg" aria-hidden="true"></canvas>
+        <div class="hud">
+          <div><span data-i18n="hud.question">Question</span><b data-hud="progress">1</b></div>
+          <div><span data-i18n="hud.score">Score</span><b data-hud="score">0</b></div>
+        </div>
+        <div class="quiz">
+          <div class="guess-card"></div>
+          <div class="guess-options"></div>
+        </div>
+        <div class="game-mascot"></div>
+        <div class="overlay" hidden></div>
+      </section>
+
+      <!-- Articles -->
+      <section id="game-articles" class="game" role="tabpanel" hidden>
+        <canvas class="game-bg" aria-hidden="true"></canvas>
+        <div class="hud">
+          <div><span data-i18n="hud.score">Score</span><b data-hud="score">0</b></div>
+          <div><span data-i18n="hud.streak">Streak</span><b data-hud="streak">0</b></div>
+          <div class="strikes" data-hud="strikes"></div>
+        </div>
+        <div class="quiz">
+          <div class="art-question blitz-question"></div>
+          <div class="art-options blitz-options"></div>
+        </div>
+        <div class="game-mascot"></div>
+        <div class="overlay" hidden></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="settings" aria-labelledby="settings-title">
+    <form id="settings-form" method="dialog">
+      <header class="dlg-head">
+        <h2 id="settings-title" data-i18n="s.title">Settings</h2>
+        <button class="icon-btn" value="cancel" data-i18n-aria="s.close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </header>
+      <div class="dlg-body">
+        <fieldset>
+          <legend data-i18n="s.ui">Interface</legend>
+          <div class="row-grid">
+            <label class="field"><span data-i18n="s.uiLang">App language</span>
+              <select name="uiLang"><option value="en">English</option><option value="cs">Čeština</option></select></label>
+            <label class="field"><span data-i18n="s.theme">Theme</span>
+              <select name="theme"><option value="auto" data-i18n="s.themeAuto">Automatic</option><option value="light" data-i18n="s.themeLight">Light</option><option value="dark" data-i18n="s.themeDark">Dark</option></select></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend data-i18n="s.langs">Languages to practise</legend>
+          <div class="checks" id="set-langs"></div>
+          <label class="field"><span data-i18n="s.principal">Main (question) language</span><select name="principal" id="set-principal"></select></label>
+        </fieldset>
+
+        <fieldset>
+          <legend data-i18n="s.vocab">Vocabulary</legend>
+          <div class="checks" id="set-cats"></div>
+          <label class="switch"><input type="checkbox" name="showArticles"><span data-i18n="s.articles"></span></label>
+          <label class="switch"><input type="checkbox" name="showEmoji"><span data-i18n="s.emoji"></span></label>
+        </fieldset>
+
+        <fieldset>
+          <legend data-i18n="s.learn">Learn mode</legend>
+          <div class="field"><span data-i18n="s.interval">Next card after (seconds)</span>
+            <span class="inline-nums"><span data-i18n="s.from">from</span> <input type="number" name="minInterval" min="2" max="120" inputmode="numeric">
+            <span data-i18n="s.to">to</span> <input type="number" name="maxInterval" min="2" max="120" inputmode="numeric"></span></div>
+          <label class="switch"><input type="checkbox" name="gradual"><span data-i18n="s.gradual"></span></label>
+        </fieldset>
+
+        <fieldset>
+          <legend data-i18n="s.games">Games</legend>
+          <label class="field range"><span data-i18n="s.timeLimit">Cloud: time per word</span>
+            <input type="range" id="r-time" name="timeLimit" min="0" max="30" step="1" data-unit=" s" data-zero="s.off"><output for="r-time"></output></label>
+          <label class="field range"><span data-i18n="s.options">Cloud: words in the cloud</span>
+            <input type="range" id="r-opts" name="options" min="4" max="12" step="1"><output for="r-opts"></output></label>
+          <label class="field range"><span data-i18n="s.strikes">Strikes until game over</span>
+            <input type="range" id="r-strikes" name="strikes" min="1" max="9" step="1"><output for="r-strikes"></output></label>
+          <label class="switch"><input type="checkbox" name="showTags"><span data-i18n="s.tags"></span></label>
+          <label class="switch"><input type="checkbox" name="sameCat"><span data-i18n="s.sameCat"></span></label>
+          <label class="field range"><span data-i18n="s.blitz">Blitz: length</span>
+            <input type="range" id="r-blitz" name="blitzSeconds" min="30" max="180" step="15" data-unit=" s"><output for="r-blitz"></output></label>
+          <label class="field range"><span data-i18n="s.pairs">Pairs: pairs per board</span>
+            <input type="range" id="r-pairs" name="pairsCount" min="3" max="8" step="1"><output for="r-pairs"></output></label>
+          <label class="field range"><span data-i18n="s.guessN">Which language?: questions</span>
+            <input type="range" id="r-guess" name="guessQuestions" min="5" max="30" step="1"><output for="r-guess"></output></label>
+          <label class="switch"><input type="checkbox" name="guessAllLangs"><span data-i18n="s.guessAll"></span></label>
+        </fieldset>
+
+        <fieldset>
+          <legend data-i18n="s.lingu">Lingu</legend>
+          <label class="switch"><input type="checkbox" name="mascot"><span data-i18n="s.mascot"></span></label>
+        </fieldset>
+
+        <fieldset>
+          <legend data-i18n="s.art">Backgrounds</legend>
+          <div class="checks" id="set-styles"></div>
+          <label class="field range"><span data-i18n="s.strength">Art intensity</span>
+            <input type="range" id="r-strength" name="strength" min="10" max="100" step="5" data-unit="%"><output for="r-strength"></output></label>
+        </fieldset>
+
+        <fieldset>
+          <legend data-i18n="s.data">Vocabulary file</legend>
+          <p id="vocab-info" class="muted"></p>
+          <div class="btn-row">
+            <label class="btn ghost file-btn"><span data-i18n="s.import">Import JSON…</span><input id="vocab-file" type="file" accept=".json,application/json"></label>
+            <button type="button" class="btn ghost" id="vocab-download" data-i18n="s.export">Download JSON</button>
+            <button type="button" class="btn ghost" id="vocab-restore" data-i18n="s.restore" hidden>Use built-in</button>
+          </div>
+        </fieldset>
+      </div>
+      <footer class="dlg-foot">
+        <p id="settings-error" class="error" role="alert"></p>
+        <button type="button" class="btn ghost" id="set-reset" data-i18n="s.reset">Reset defaults</button>
+        <span class="spacer"></span>
+        <button class="btn ghost" value="cancel" data-i18n="s.cancel">Cancel</button>
+        <button class="btn primary" value="save" data-i18n="s.save">Save</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/flags.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/mascot.js"></script>
+  <script src="js/games/shell.js"></script>
+  <script src="js/games/learn.js"></script>
+  <script src="js/games/cloud.js"></script>
+  <script src="js/games/blitz.js"></script>
+  <script src="js/games/pairs.js"></script>
+  <script src="js/games/guess.js"></script>
+  <script src="js/games/articles.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
