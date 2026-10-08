@@ -118,7 +118,7 @@ const Mascot = (() => {
       root.tabIndex = 0;
       root.setAttribute('role', 'button');
       root.setAttribute('aria-label', t('m.aria'));
-      const poke = () => api.chatter();
+      const poke = () => { api.chatter(); if (typeof Progress !== 'undefined') Progress.linguTap(); };
       root.addEventListener('click', poke);
       root.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); } });
     }

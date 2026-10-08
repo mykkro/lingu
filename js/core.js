@@ -47,8 +47,39 @@ const App = (() => {
     };
   }
 
+  // Newer emoji render as an empty box on older systems; hide those instead.
+  const emojiCache = new Map();
+  let probe = null;
+  function emojiSupported(emoji) {
+    if (!emoji) return false;
+    if (emojiCache.has(emoji)) return emojiCache.get(emoji);
+    let ok = true;
+    try {
+      if (!probe) {
+        const c = document.createElement('canvas');
+        c.width = c.height = 32;
+        probe = c.getContext('2d', { willReadFrequently: true });
+        probe.font = '24px sans-serif';
+        probe.textBaseline = 'top';
+        probe.tofu = render('\u{10FFFD}'); // a private-use code point: always the "missing glyph" box
+      }
+      ok = render(emoji) !== probe.tofu;
+    } catch { ok = true; }
+    emojiCache.set(emoji, ok);
+    return ok;
+  }
+  function render(text) {
+    probe.clearRect(0, 0, 32, 32);
+    probe.fillText(text, 0, 0);
+    const d = probe.getImageData(0, 0, 32, 32).data;
+    let h = 0;
+    for (let i = 3; i < d.length; i += 16) h = (h * 31 + d[i] + d[i - 1] + d[i - 3]) >>> 0;
+    return h;
+  }
+
   function useData(raw, source) {
     Object.assign(data, validate(raw), { source });
+    for (const e of data.entries) if (e.emoji && !emojiSupported(e.emoji)) e.emoji = '';
     bagCache.clear();
   }
 

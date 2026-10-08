@@ -13,6 +13,9 @@
     [/^guess(\d+)$/, 'guess.title', m => t('st.questionsN', { n: m[1] })],
     [/^articles$/, 'nav.articles', null],
     [/^gap$/, 'gap.title', null],
+    [/^odd$/, 'odd.title', null],
+    [/^builder$/, 'builder.title', null],
+    [/^run$/, 'run.title', null],
   ];
   const LOWER_IS_BETTER = /^$/;
 

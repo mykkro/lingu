@@ -29,6 +29,20 @@ const Flags = (() => {
     fi: nordic('#fff', '#002F6C'),
     da: nordic('#C8102E', '#fff'),
     no: nordic('#BA0C2F', '#fff', '#00205B'),
+    ru: h3('#fff', '#0039A6', '#D52B1E'),
+    uk: `<rect width="30" height="10" fill="#0057B7"/><rect y="10" width="30" height="10" fill="#FFD700"/>`,
+    el: `<rect width="30" height="20" fill="#0D5EAF"/>
+         ${[1, 3, 5, 7].map(i => `<rect y="${(i * 20 / 9).toFixed(2)}" width="30" height="2.22" fill="#fff"/>`).join('')}
+         <rect width="11.11" height="11.11" fill="#0D5EAF"/>
+         <rect y="4.44" width="11.11" height="2.22" fill="#fff"/><rect x="4.44" width="2.22" height="11.11" fill="#fff"/>`,
+    // Latin has no country: a Roman-style crimson banner with a golden laurel.
+    la: `<rect width="30" height="20" fill="#8E1B1B"/>
+         <path d="M10 15 Q6 10 10 5 M20 15 Q24 10 20 5" stroke="#E8B923" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+         <circle cx="15" cy="10" r="2.2" fill="#E8B923"/>`,
+    eo: `<rect width="30" height="20" fill="#009900"/><rect width="10" height="10" fill="#fff"/>
+         <path d="M5 1.6 6.1 4.4 9 4.5 6.7 6.3 7.5 9.1 5 7.5 2.5 9.1 3.3 6.3 1 4.5 3.9 4.4Z" fill="#009900"/>`,
+    ga: v3('#169B62', '#fff', '#FF883E'),
+    ro: v3('#002B7F', '#FCD116', '#CE1126'),
   };
 
   function svg(code) {

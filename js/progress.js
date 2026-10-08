@@ -26,7 +26,7 @@ const Progress = (() => {
     { id: 'cards500',   icon: '📚', check: p => p.cards >= 500 },
     { id: 'poly5',      icon: '🌍', check: p => Object.values(p.perLang).filter(l => l.c > 0).length >= 5 },
     { id: 'poly10',     icon: '🗺️', check: p => Object.values(p.perLang).filter(l => l.c > 0).length >= 10 },
-    { id: 'explorer',   icon: '🧭', check: p => ['cloud', 'blitz', 'pairs', 'guess', 'articles', 'gap'].every(g => p.games[g]) },
+    { id: 'explorer',   icon: '🧭', check: p => ['cloud', 'blitz', 'pairs', 'guess', 'articles', 'gap', 'odd', 'builder', 'run'].every(g => p.games[g]) },
     { id: 'blitz20',    icon: '⚡', check: (p, e) => e && e.game === 'blitz' && e.score >= 20 },
     { id: 'pairsClean', icon: '🧩', check: (p, e) => e && e.game === 'pairs' && e.detail && e.detail.boards >= 1 && e.detail.mistakes === 0 },
     { id: 'cloud300',   icon: '☁️', check: (p, e) => e && e.game === 'cloud' && e.score >= 300 },
@@ -37,6 +37,32 @@ const Progress = (() => {
     { id: 'days7',      icon: '🏅', check: p => p.days.length >= 7 },
     { id: 'nightOwl',   icon: '🦉', check: () => new Date().getHours() >= 22 },
     { id: 'earlyBird',  icon: '🐦', check: () => new Date().getHours() < 7 },
+    // New games
+    { id: 'odd200',     icon: '🕵️', check: (p, e) => e && e.game === 'odd' && e.score >= 200 },
+    { id: 'builder250', icon: '🧱', check: (p, e) => e && e.game === 'builder' && e.score >= 250 },
+    { id: 'run300',     icon: '🐧', check: (p, e) => e && e.game === 'run' && e.score >= 300 },
+    { id: 'run15',      icon: '🐟', check: (p, e) => e && e.game === 'run' && e.detail && e.detail.caught >= 15 },
+    { id: 'timeBender', icon: '⏳', check: (p, e) => e && e.game === 'run' && e.detail && e.detail.slowUsed >= 3 },
+    // Bigger milestones
+    { id: 'correct2500', icon: '🏆', check: p => p.correct >= 2500 },
+    { id: 'streak50',   icon: '🌋', check: p => p.bestStreak >= 50 },
+    { id: 'cards1000',  icon: '🗃️', check: p => p.cards >= 1000 },
+    { id: 'poly15',     icon: '🗼', check: p => Object.values(p.perLang).filter(l => l.c > 0).length >= 15 },
+    { id: 'games50',    icon: '🎮', check: p => Object.values(p.games).reduce((a, b) => a + b, 0) >= 50 },
+    { id: 'days30',     icon: '🗓️', check: p => p.days.length >= 30 },
+    // Scripts and classics
+    { id: 'cyrillic',   icon: '🪆', check: p => ((p.perLang.ru || {}).c || 0) + ((p.perLang.uk || {}).c || 0) >= 10 },
+    { id: 'greek',      icon: '🏛️', check: p => ((p.perLang.el || {}).c || 0) >= 10 },
+    { id: 'latin',      icon: '📜', check: p => ((p.perLang.la || {}).c || 0) >= 10 },
+    // All of Scandinavia plus three lands the Vikings sailed to (Dublin, Danelaw, Normandy, Rus', Finland).
+    { id: 'viking',     icon: '🛶', check: p => {
+      const ok = code => ((p.perLang[code] || {}).c || 0) >= 5;
+      return ['da', 'sv', 'no'].every(ok) && ['ga', 'en', 'fr', 'ru', 'fi'].filter(ok).length >= 3;
+    } },
+    // Just for fun
+    { id: 'weekend',    icon: '🛋️', check: p => [6, 0].every(d => p.days.some(x => new Date(x + 'T12:00:00').getDay() === d)) },
+    { id: 'linguPal',   icon: '💬', check: p => (p.linguTaps || 0) >= 10 },
+    { id: 'collector',  icon: '🎒', check: () => App.S.langs && App.S.langs.length >= 10 },
   ];
 
   let toastQueue = [], toastBusy = false;
@@ -109,13 +135,19 @@ const Progress = (() => {
 
   const best = key => (P.scores[key] && P.scores[key][0] ? P.scores[key][0].score : 0);
 
+  function linguTap() {
+    P.linguTaps = (P.linguTaps || 0) + 1;
+    save();
+    evaluate(null);
+  }
+
   function reset() {
     P = blank();
     save();
   }
 
   return {
-    answer, card, finish, best, reset, ACH,
+    answer, card, finish, best, reset, linguTap, ACH,
     get data() { return P; },
   };
 })();

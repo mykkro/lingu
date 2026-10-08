@@ -1,14 +1,20 @@
 # Lingu 🐧
 
-A playful vocabulary trainer for **15 languages**, starring Lingu the penguin.
+A playful vocabulary trainer for **22 languages**, starring Lingu the penguin.
 Plain HTML, CSS and JavaScript, with no build step and no dependencies.
 
 **Languages:** English, Czech, Spanish, German, Polish, French, Italian, Portuguese, Dutch,
-Slovak, Swedish, Hungarian, Finnish, Danish, Norwegian (Bokmål).
+Slovak, Swedish, Hungarian, Finnish, Danish, Norwegian (Bokmål), Russian, Ukrainian, Greek, Latin, Esperanto, Irish (Gaeilge), Romanian.
 
 **Vocabulary:** about 2,000 entries in 19 themed categories (animals, food, home, nature, city & travel,
 people & jobs, school & work, time, sport & hobbies, verbs, adjectives, phrases, questions and more).
-Nouns carry their articles (der/die/das, le/la, el/la, il/lo/la, o/a, de/het, en/ett, en/et).
+Nouns carry their articles (der/die/das, le/la, el/la, il/lo/la, o/a, de/het, en/ett, en/et, ο/η/το).
+Greek verbs are listed in their dictionary form (1st person: τρώω, "I eat"); Latin uses neo-Latin terms for modern things (computatrum, telephonum).
+Romanian verbs use the "a …" infinitive (a mânca); Irish verbs use the imperative dictionary form (ith).
+
+> **Translations are machine-written** and have not been checked by native speakers. The Irish set is
+> the most likely to contain mistakes, especially the phrases. Have a fluent speaker look them over
+> before relying on them, and corrections to `data/vocabulary.json` are very welcome.
 
 ## Modes
 
@@ -21,7 +27,10 @@ Nouns carry their articles (der/die/das, le/la, el/la, il/lo/la, o/a, de/het, en
 | **Which language?** | Guess the language of a word or phrase. |
 | **Articles** | Pick the right article for a noun. |
 | **Fill the gap** | One word is missing from a phrase. Pick it from the options. |
-| **Stats** | Totals, accuracy per language, top-10 high scores per game, and 21 achievements. |
+| **Odd One Out** | Four words, one intruder: either three share a category, or three mean the same thing in different languages. |
+| **Sentence Builder** | Tap shuffled word tiles to rebuild a phrase. On a streak, decoy words sneak in. |
+| **Penguin Run** | Words fall from the sky. Steer Lingu (← →, mouse/finger drag or phone tilt) to catch the right translation. It speeds up steadily, and from level 4 words in the wrong language sneak in. Catch a gold ❤ to heal a strike or a blue 💙 to bank a slow-motion charge (max 3; Space, Ctrl, S or tap the button). |
+| **Stats** | Totals, accuracy per language, top-10 high scores per game, and 39 achievements. |
 
 Lingu waves, cheers and sulks along with you. Tap him for language facts, proverbs and penguin wisdom.
 The interface is available in **English** and **Czech** (Settings → App language).
